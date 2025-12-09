@@ -1,0 +1,6 @@
+{service_name="unknown_service"} 
+| pattern `<_> <_> <message>`
+| regexp "Nouvelle ouverture de session[\\s\\S]*?Nom du compte\\s*:\\s*(?P<utilisateur>[^\\s\\t]+)"
+| regexp "Nom de la station de travail\\s*:\\s*(?P<machine>[^\\s\\t-]+)"
+| regexp `(?P<action>L'ouverture de session d'un compte s'est[^\.]+)`
+| line_format "{{.action}}"
