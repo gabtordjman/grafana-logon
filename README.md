@@ -1,6 +1,6 @@
 # Grafana Logon Monitor
 
-## *still in development, configurations files and dashboard may change in the future !*
+## *still in development as you can see by the screenshot. Configurations files and dashboard may change in the future, so be sure to update !*
 
 ## Overview
 **Grafana Logon Monitor** is a centralized monitoring solution for Windows authentication events. It captures, analyzes, and visualizes in real-time logins, logoffs, and authentication attempts across your Windows infrastructure.
@@ -38,3 +38,15 @@ Windows Machines → NXLog → Alloy (Grafana Agent) → Loki → Grafana
     - Purpose: Shows login attempts over time, and a total of all the methods used to login
     
     - Refresh Rate: Real-time (10s intervals)
+  
+## 🔍 Query
+
+```loki
+{service_name="unknown_service"} 
+| pattern `<_> <_> <message>`
+| regexp "Nouvelle ouverture de session[\\s\\S]*?Nom du compte\\s*:\\s*(?P<utilisateur>[^\\s\\t]+)"
+| regexp "Nom de la station de travail\\s*:\\s*(?P<machine>[^\\s\\t-]+)"
+| regexp `(?P<action>L'ouverture de session d'un compte s'est[^\.]+)`
+| line_format "{{.action}}"
+```
+*This query is used to create a table. It's also available in queries/query.loki*
