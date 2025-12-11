@@ -11,7 +11,7 @@
 *Screenshot of the dashboard*
 
 ## 🎯 Features
-- **Real-time monitoring** of Windows security events (ID 4624, 4625, 4634, 4647), and RDP login events (ID 25)
+- **Real-time monitoring** of Windows security events (ID 4776 for successful and failed logins), and RDP login events (ID 25)
 - **Automatic extraction** of critical information:
   - Authenticated user
   - Source workstation
