@@ -29,11 +29,16 @@ Windows Machines → NXLog → Alloy (Grafana Agent) → Loki → Grafana
 3. **Loki**: Structured log storage
 4. **Grafana**: Visualization and dashboards
 
+### Configurations
+All of the configurations files used in this project are available in the "configs" folder. You'll find the nxLog config, and the alloy config. Be sure to change the **IP** and the **PORT** in the nxLog and Alloy config file if your system is configured differently. 
+
+The dashboard folder contains the dashboard used in this project, the same you see in the screenshot. 
+
 ## 📈 Dashboard
 ### Dashboard Sections
-1. **Login Activity Timeline**:
+1. **Login Activity**:
 
-    - Visualization: Time series graph, Pie Chart, Table
+    - Visualization: Table, Time Series Graph, Pie Chart. 
 
     - Purpose: Shows login attempts over time, a total of all the methods used to login, who tried to connect and on what service (Windows Authentication, RDP...)
   
