@@ -1,6 +1,6 @@
-# Uploading the dashboard to your Grafana instance
+# Uploading a dashboard to your Grafana instance
 
-To upload the dashboard, you just need to copy and paste the code of the dashboard you want in this folder. For example, i can copy the "windows-logon-monitor" json to import it into Grafana. 
+To upload a dashboard, you just need to copy and paste the code of the dashboard you want in this folder. For example, i can copy the "logon-dashboard" json to import it into Grafana. 
 
 ## BEFORE UPLOADING ##
 
