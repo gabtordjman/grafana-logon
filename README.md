@@ -1,11 +1,11 @@
 # Grafana Cross-Platform Log & Event Monitor
 
 ## Status
-*Project in development (as of December 18, 2025). Configurations and dashboards may evolve — keep them updated.*
+*Project in development (as of December 19, 2025). Configurations and dashboards may evolve — keep them updated.*
 
 ## Overview
 **Grafana CPL & EM** provides centralized monitoring of Windows and Linux authentication events and system logs.  
-It captures, analyzes, and visualizes in real time: logins, logoffs, authentication attempts, and system events across your infrastructure.
+It aggregates login activity, system events, error reports, and user‑management actions from both Windows and Linux systems.
 
 ## 📸 Screenshots
 ![Logon Dashboard](images/logon-dashboard.png)  
@@ -17,7 +17,7 @@ It captures, analyzes, and visualizes in real time: logins, logoffs, authenticat
   - User, source workstation, event type, timestamp  
 - Multiple dashboards tailored for specific use cases  
 - Intuitive Grafana visualizations (tables, time series, charts)  
-- Lightweight architecture using NXLog (collector) + Alloy (processor)
+- Lightweight architecture using NXLog + Alloy
 
 ## 🏗️ Architecture
 **Flow:** Windows/Linux → NXLog → Alloy (Grafana Agent) → Loki → Grafana  
