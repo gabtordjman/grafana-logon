@@ -15,88 +15,56 @@
       }
     ]
   },
-  "description": "Permet de voir les événements et erreurs sur des systèmes Windows et Linux",
+  "description": "This dashboard provides all in one monitoring using variables so you can easily monitor your Windows and Linux instances in the same place",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 4,
   "links": [],
   "panels": [
     {
       "datasource": {
-        "type": "loki",
-        "uid": "cf6gwgsp02iv4c"
+        "type": "prometheus",
+        "uid": "cf767eq0ggutcc"
       },
-      "description": "Affiche le nombre d'erreurs et d'évènements pour les différents systèmes",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
           },
-          "mappings": []
+          "unit": "percent"
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{category=\"Erreurs Windows\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Erreurs Windows"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-blue",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{category=\"Erreurs Linux\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Evènements/Erreurs Linux"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 6,
+        "h": 5,
+        "w": 3,
         "x": 0,
         "y": 0
       },
-      "id": 3,
+      "id": 4,
       "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "pieType": "pie",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -104,42 +72,33 @@
           "fields": "",
           "values": false
         },
-        "sort": "desc",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "label_replace(\r\n  sum(count_over_time({job=\"loki.source.gelf.listen\"} | json | _SourceName=\"Service Control Manager\" [30m])),\r\n  \"category\", \"Erreurs Windows\", \"job\", \".*\"\r\n)\r\n",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
           "datasource": {
-            "type": "loki",
-            "uid": "cf6gwgsp02iv4c"
+            "type": "prometheus",
+            "uid": "cf767eq0ggutcc"
           },
-          "direction": "backward",
           "editorMode": "code",
-          "expr": "label_replace(\r\n  sum(count_over_time({job=\"loki.source.gelf.listen\"} | json | _SourceModuleType=\"im_systemd\" [30m])),\r\n  \"category\", \"Erreurs Linux\", \"job\", \".*\"\r\n)",
+          "expr": "(\r\n    windows_cpu_time_total{job=\"$host\", mode=\"interrupt\"}\r\n    or\r\n    node_cpu_seconds_total{job=\"$host\", cpu=\"1\",mode=\"user\"}\r\n)",
           "hide": false,
-          "queryType": "range",
-          "refId": "B"
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Erreurs/Evènements des systèmes sur 30mn",
-      "type": "piechart"
+      "title": "Utilisation du CPU",
+      "type": "gauge"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "cf6gwgsp02iv4c"
+        "type": "prometheus",
+        "uid": "cf767eq0ggutcc"
       },
       "fieldConfig": {
         "defaults": {
@@ -189,66 +148,32 @@
                 "value": 0
               },
               {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{category=\"Erreurs Windows\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Erreurs Windows"
+                "color": "#EAB839",
+                "value": 60
               },
               {
-                "id": "color",
-                "value": {
-                  "fixedColor": "light-blue",
-                  "mode": "fixed"
-                }
+                "color": "red",
+                "value": 85
               }
             ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "{category=\"Erreurs Linux\"}"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Erreurs Linux"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+          "unit": "percent"
+        },
+        "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 17,
-        "x": 6,
+        "h": 5,
+        "w": 5,
+        "x": 3,
         "y": 0
       },
-      "id": 4,
+      "id": 11,
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -259,26 +184,20 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "direction": "backward",
-          "editorMode": "code",
-          "expr": "label_replace(\r\n  sum(count_over_time({job=\"loki.source.gelf.listen\"} | json | _SourceName=\"Service Control Manager\" [1h])),\r\n  \"category\", \"Erreurs Windows\", \"job\", \".*\"\r\n)\r\n",
-          "queryType": "range",
-          "refId": "A"
-        },
-        {
           "datasource": {
-            "type": "loki",
-            "uid": "cf6gwgsp02iv4c"
+            "type": "prometheus",
+            "uid": "cf767eq0ggutcc"
           },
-          "direction": "backward",
           "editorMode": "code",
-          "expr": "label_replace(\r\n  sum(count_over_time({job=\"loki.source.gelf.listen\"} | json | _SourceModuleType=\"im_systemd\" [1h])),\r\n  \"category\", \"Erreurs Linux\", \"job\", \".*\"\r\n)",
+          "expr": "(\r\n    windows_cpu_time_total{job=\"$host\", mode=\"interrupt\"}\r\n    or\r\n    node_cpu_seconds_total{job=\"$host\", cpu=\"1\",mode=\"user\"}\r\n)",
           "hide": false,
-          "queryType": "range",
-          "refId": "B"
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Erreurs/Evènements des systèmes sur 1h",
+      "title": "Utilisation du CPU",
       "type": "timeseries"
     },
     {
@@ -393,12 +312,12 @@
         ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 23,
-        "x": 0,
-        "y": 11
+        "h": 10,
+        "w": 16,
+        "x": 8,
+        "y": 0
       },
-      "id": 2,
+      "id": 9,
       "options": {
         "cellHeight": "sm",
         "showHeader": true
@@ -408,7 +327,7 @@
         {
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{job=\"loki.source.gelf.listen\"} | json | _SourceModuleType=\"im_systemd\"",
+          "expr": "{job=\"loki.source.gelf.listen\"}\r\n| json\r\n| _SourceModuleType=\"im_systemd\"\r\n| label_format ip=\"{{._ip_address}}\"\r\n| (host=~\"$linux\" or ip=~\"$ip\")\r\n",
           "queryType": "range",
           "refId": "A"
         }
@@ -435,6 +354,9 @@
               },
               {
                 "path": "_User"
+              },
+              {
+                "path": "_ip_address"
               }
             ],
             "source": "Line"
@@ -459,6 +381,7 @@
               "_SourceModuleName": "",
               "_SourceModuleType": "Type du module",
               "_User": "Utilisateur",
+              "_ip_address": "Adresse IP",
               "host": "Machine",
               "id": "",
               "short_message": "Message"
@@ -497,10 +420,79 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "cf767eq0ggutcc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 30,
+          "min": 50,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 300
+              }
+            ]
+          },
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cf767eq0ggutcc"
+          },
+          "editorMode": "code",
+          "expr": "(\r\n  windows_memory_available_bytes{job=\"$host\"} / 1024 / 1024 / 1024\r\n)\r\nor\r\n(\r\n  node_memory_MemAvailable_bytes{job=\"$host\"} / 1024 / 1024 / 1024\r\n)\r\n",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Mémoire disponible",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
         "type": "loki",
         "uid": "cf6gwgsp02iv4c"
       },
-      "description": "Affichage des erreurs présentes dans le champ Applications de l'Observateur d'Elements",
+      "description": "Voir qui a ouvert sa session dernièrement",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -535,12 +527,31 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "labels"
+              "options": "message"
             },
             "properties": [
               {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "pattern": "^AUDIT_FAILURE\\b.*",
+                      "result": {
+                        "index": 0,
+                        "text": "Echec de l'authentification"
+                      }
+                    },
+                    "type": "regex"
+                  }
+                ]
+              },
+              {
                 "id": "custom.width",
-                "value": 307
+                "value": 203
+              },
+              {
+                "id": "custom.width",
+                "value": 454
               }
             ]
           },
@@ -552,7 +563,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 557
+                "value": 5107
               }
             ]
           },
@@ -564,19 +575,134 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 209
+                "value": 194
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "_Severity"
+              "options": "utilisateur"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 141
+                "value": 145
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "domaine"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 127
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "machine"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 161
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "labels"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 263
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_EventID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 99
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ID"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 64
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Type d'évènement"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "short_message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 517
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "auth_message"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 595
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "message"
+            },
+            "properties": []
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "_Channel"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
               }
             ]
           },
@@ -588,68 +714,52 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 129
+                "value": 149
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "Message"
+              "options": "Machine"
             },
             "properties": [
               {
                 "id": "custom.width",
-                "value": 697
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Source de l'erreur"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 192
+                "value": 161
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 23,
-        "x": 0,
-        "y": 19
+        "h": 11,
+        "w": 16,
+        "x": 8,
+        "y": 10
       },
-      "id": 1,
+      "id": 2,
       "options": {
         "cellHeight": "sm",
         "showHeader": true,
         "sortBy": [
           {
-            "desc": false,
-            "displayName": "Utilisateur"
+            "desc": true,
+            "displayName": "Message"
           }
         ]
       },
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": {
-            "type": "loki",
-            "uid": "cf6gwgsp02iv4c"
-          },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "{service_name=\"loki.source.gelf.listen\"}",
+          "expr": "{job=\"loki.source.gelf.listen\"} \r\n| json \r\n| label_format eventType=\"{{._EventType}}\" \r\n| label_format user=\"{{._TargetUserName}}\" \r\n| label_format workstation=\"{{._Workstation}}\" \r\n| label_format message=\"{{._EventType}} - {{.short_message}}\" \r\n| label_format ip=\"{{._ip_address}}\" \r\n| ip=\"$ip\"\r\n",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Erreurs Windows",
+      "title": "Echecs d'authentification WINDOWS",
       "transformations": [
         {
           "id": "extractFields",
@@ -658,22 +768,28 @@
             "format": "json",
             "jsonPaths": [
               {
-                "path": "full_message"
+                "path": "_EventType"
               },
               {
-                "path": "_Severity"
-              },
-              {
-                "path": "_SourceName"
+                "path": "_EventID"
               },
               {
                 "path": "_Channel"
               },
               {
-                "path": "_SourceModuleName"
+                "path": "message"
+              },
+              {
+                "path": "host"
+              },
+              {
+                "path": "_TargetUserName"
+              },
+              {
+                "path": "_ip_address"
               }
             ],
-            "source": "Line"
+            "source": "labels"
           }
         },
         {
@@ -689,12 +805,15 @@
             "includeByName": {},
             "indexByName": {},
             "renameByName": {
-              "_AccountName": "Utilisateur",
-              "_Channel": "Canal",
-              "_Severity": "Sévérité",
-              "_SourceModuleName": "Nom du module",
-              "_SourceName": "Source de l'erreur",
-              "full_message": "Message"
+              "_Channel": "",
+              "_EventID": "ID",
+              "_EventType": "Type d'évènement",
+              "_TargetUserName": "Utilisateur",
+              "_ip_address": "Adresse IP",
+              "host": "Machine",
+              "labelTypes": "",
+              "short_message": "Message",
+              "tsNs": ""
             }
           }
         },
@@ -706,22 +825,13 @@
                 "config": {
                   "id": "equal",
                   "options": {
-                    "value": "Application"
+                    "value": "AUDIT_FAILURE"
                   }
                 },
-                "fieldName": "Canal"
-              },
-              {
-                "config": {
-                  "id": "equal",
-                  "options": {
-                    "value": "System"
-                  }
-                },
-                "fieldName": "Canal"
+                "fieldName": "Type d'évènement"
               }
             ],
-            "match": "any",
+            "match": "all",
             "type": "include"
           }
         }
@@ -733,15 +843,119 @@
   "schemaVersion": 42,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "host",
+          "value": "host"
+        },
+        "name": "choice",
+        "options": [
+          {
+            "selected": false,
+            "text": "ip",
+            "value": "ip"
+          },
+          {
+            "selected": true,
+            "text": "host",
+            "value": "host"
+          }
+        ],
+        "query": "ip,host",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "name": "device",
+        "options": [],
+        "query": "",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "allowCustomValue": true,
+        "current": {
+          "text": "vm-win10syslog",
+          "value": "vm-win10syslog"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cf767eq0ggutcc"
+        },
+        "definition": "label_values(job)",
+        "includeAll": false,
+        "name": "host",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "grafana-aio",
+          "value": "grafana-aio"
+        },
+        "name": "linux",
+        "options": [
+          {
+            "selected": false,
+            "text": "ansible-lab",
+            "value": "ansible-lab"
+          },
+          {
+            "selected": true,
+            "text": "grafana-aio",
+            "value": "grafana-aio"
+          }
+        ],
+        "query": "ansible-lab,grafana-aio",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "192.168.1.206",
+          "value": "192.168.1.206"
+        },
+        "name": "ip",
+        "options": [
+          {
+            "selected": false,
+            "text": "192.168.1.200",
+            "value": "192.168.1.200"
+          },
+          {
+            "selected": true,
+            "text": "192.168.1.206",
+            "value": "192.168.1.206"
+          },
+          {
+            "selected": false,
+            "text": "192.168.1.207",
+            "value": "192.168.1.207"
+          }
+        ],
+        "query": "192.168.1.200,192.168.1.206,192.168.1.207",
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Monitor Events and Errors",
-  "uid": "addnn7v",
-  "version": 25
+  "title": "AIO Dashboard",
+  "uid": "ad2ltlp",
+  "version": 78
 }
